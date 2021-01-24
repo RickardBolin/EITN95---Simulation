@@ -1,0 +1,46 @@
+import csv
+import matplotlib.pyplot as plt
+import numpy as np
+import math
+
+
+with open(file='/Users/rickard/PycharmProjects/EITN95-Simulering/Assignment 1/logTask6') as csv_file:
+    csv_reader = csv.reader(csv_file)
+    measurements = []
+    number_in_queue = []
+
+    for row in csv_reader:
+        measurements.append(int(row[0]))
+        number_in_queue.append(int(row[1]))
+
+
+font = {'family': 'serif',
+        'color':  'darkred',
+        'weight': 'normal',
+        'size': 16,
+        }
+
+plt.plot(measurements, number_in_queue)
+plt.xticks([10, 100, 200, 400, 600, 800, 1000])
+plt.xlim(0, 1000)
+plt.ylim(0, 100)
+plt.vlines(10, 0, 1000, colors='r', label="End of transient phase")
+plt.ylabel("Customers in the system", fontdict=font)
+plt.xlabel("Measurement", fontdict=font)
+plt.title("Customers in the system at each measurement.", fontdict=font)
+plt.legend()
+plt.show()
+
+measurements = measurements[11:]
+number_in_queue = number_in_queue[11:]
+
+N = len(measurements)
+
+sample_mean = np.mean(number_in_queue)
+sample_mean_std = math.sqrt(np.var(number_in_queue) / N)
+
+CF = [sample_mean - 1.96*sample_mean_std, sample_mean + 1.96*sample_mean_std]
+CF_length = CF[1] - CF[0]
+print(sample_mean)
+print(CF)
+print(CF_length)
